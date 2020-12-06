@@ -11,5 +11,7 @@ urlpatterns = [
 
     path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
 
-    path('<int:id>/vote/', views.vote, name='vote')
+    path('<int:id>/vote/', views.vote, name='vote'),
+
+    path('api/<int:id>', views.json),
 ]
