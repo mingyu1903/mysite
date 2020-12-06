@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 # Create your views here.
 from django.template import loader
 from .models import Question, Choice
 from django.urls import reverse
 from django.views import generic
+from django.core import serializers
 
 
 class IndexView(generic.ListView):
@@ -57,6 +58,18 @@ def vote(request, id):
         selected_choice.save()
     return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
+def json(request, id):
+    q = Question.objects.get(id=id)
+    # questiontext = q.question_text
+    c = q.choice_set.all()
+    serialized_object = serializers.serialize('json', c)
+    return JsonResponse(
+        {
+            'id': id,
+            'text': q.question_text,
+            'choice': serialized_object,
+        }
+    )
 
 # def helloworld(request):
 #     # print(request)
