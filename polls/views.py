@@ -2,16 +2,38 @@ from django.shortcuts import render, get_object_or_404
 from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 # Create your views here.
 from django.template import loader
-from .models import Question, Choice, Room
+from .models import Question, Choice, Room, Hupu
 from django.urls import reverse
 from django.views import generic
 from django.core import serializers
 from rest_framework import generics
-from .serializers import RoomSerializers
+from .serializers import RoomSerializers, QuestionSerializers, HupuSerializers
 
 class RoomView(generics.ListAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializers
+
+def savehupu(request, page=1):
+    import requests
+    from polls.models import Hupu
+
+    url = 'https://soccer.hupu.com/api/v1/fifa'
+    r = requests.get(url, params={'p': page}).json()
+    data = r.get('data')
+    for j in data:
+        c = j.get('content')
+        t = j.get('title')
+        news = Hupu(hupu_title = t, hupu_content = c)
+        news.save()
+    return JsonResponse({'data':data})
+
+class HupuView(generics.ListAPIView):
+    queryset = Hupu.objects.all()
+    serializer_class = HupuSerializers
+
+class QuestionView(generics.ListAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializers
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'

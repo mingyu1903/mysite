@@ -6,6 +6,10 @@ app_name = 'polls'
 urlpatterns = [
     path('home/', views.RoomView.as_view()),
 
+    path('hupu/', views.HupuView.as_view()),
+
+    path('savehupu/<int:page>/', views.savehupu),
+
     path('', views.IndexView.as_view(), name='index'),
     # path('',views.helloworld, name='hellworld'),
         # ex: /polls/5/
@@ -15,5 +19,6 @@ urlpatterns = [
 
     path('<int:id>/vote/', views.vote, name='vote'),
 
-    path('api/<int:id>', views.json),
+    # path('api/<int:id>', views.json),
+    path('api/', views.QuestionView.as_view()),
 ]
