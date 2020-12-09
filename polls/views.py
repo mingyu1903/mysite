@@ -2,11 +2,16 @@ from django.shortcuts import render, get_object_or_404
 from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 # Create your views here.
 from django.template import loader
-from .models import Question, Choice
+from .models import Question, Choice, Room
 from django.urls import reverse
 from django.views import generic
 from django.core import serializers
+from rest_framework import generics
+from .serializers import RoomSerializers
 
+class RoomView(generics.ListAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializers
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
